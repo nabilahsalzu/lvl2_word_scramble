@@ -1,59 +1,44 @@
 #include "game.h"
 #include "gfx.h"
-#include <string.h>
 
-char scrambled[50] = "ELPPA";    // dummy scrambled word
-char input[50] = "";              // user input
-int input_index = 0;
-int show_correct = 0;             // flag to display "Correct!" message
-
-// ----------------- DRAW GAME SCREEN -----------------
 void draw_game() {
-    gfx_color(0,0,0); // black text
+    int w = gfx_xsize();
+    int h = gfx_ysize();
 
-    gfx_text("Unscramble this word:", 100, 100, 0);
-    gfx_text(scrambled, 100, 150, 0);
+    // Title
+    gfx_color(0, 0, 0);
+    gfx_text("GAME SCREEN", w/2 - 80, 100, 2);
 
-    gfx_text("Your answer:", 100, 250, 0);
-    gfx_text(input, 100, 300, 0);
+    // Back button
+    int btn_w = 300;
+    int btn_h = 40;
+    int btn_x = (w - btn_w) / 2;
+    int btn_y = (h - btn_h) / 2;
 
-    if (show_correct) {
-        gfx_text("Correct!", 100, 400, 0);
-    }
+    gfx_color(200, 200, 200);
+    gfx_fillrectangle(btn_x, btn_y, btn_w, btn_h);
 
-    gfx_text("Press [q] to return to menu", 100, 500, 0);
+    gfx_color(0, 0, 0);
+    gfx_text("Back", btn_x + 120, btn_y + 25, 1);
 }
 
-// ----------------- HANDLE INPUT -----------------
-GameState game_handle_input(char c) {
-    if (c == 'q') {
-        // go back to menu
-        input_index = 0;
-        input[0] = '\0';
-        show_correct = 0;
-        return STATE_MENU;
-    }
+GameState game_handle_input(char event) {
+    if (event == 1) {
+        int w = gfx_xsize();
+        int h = gfx_ysize();
 
-    if (c == 13) { // ENTER
-        input[input_index] = '\0';
-        if (strcmp(input, "APPLE") == 0) {
-            show_correct = 1;
-        } else {
-            show_correct = 0;
+        int btn_w = 300;
+        int btn_h = 40;
+        int btn_x = (w - btn_w) / 2;
+        int btn_y = (h - btn_h) / 2;
+
+        int mx = gfx_xpos();
+        int my = gfx_ypos();
+
+        if (mx >= btn_x && mx <= btn_x + btn_w &&
+            my >= btn_y && my <= btn_y + btn_h) {
+            return STATE_MENU;
         }
-        input_index = 0;
-        input[0] = '\0';
-    }
-    else if (c == 8) { // BACKSPACE
-        if (input_index > 0) {
-            input_index--;
-            input[input_index] = '\0';
-        }
-    }
-    else {
-        // add letter to input
-        input[input_index++] = c;
-        input[input_index] = '\0';
     }
 
     return STATE_PLAYING;

@@ -32,6 +32,9 @@ static Window  gfx_window;
 static GC      gfx_gc;
 static Colormap gfx_colormap;
 static int      gfx_fast_color_mode = 0;
+//add 
+static int gfx_width = 0;
+static int gfx_height = 0;
 
 /* These values are saved by gfx_wait then retrieved later by gfx_xpos and gfx_ypos. */
 
@@ -61,6 +64,9 @@ void gfx_open( int width, int height, const char *title )
 	int whiteColor = WhitePixel(gfx_display, DefaultScreen(gfx_display));
 
 	gfx_window = XCreateSimpleWindow(gfx_display, DefaultRootWindow(gfx_display), 0, 0, width, height, 0, blackColor, blackColor);
+	//add 
+	gfx_width = width; 
+	gfx_height = height;
 
 	XSetWindowAttributes attr;
 	attr.backing_store = Always;
@@ -257,5 +263,16 @@ int gfx_ypos()
 void gfx_flush()
 {
 	XFlush(gfx_display);
+}
+
+//add
+int gfx_xsize()
+{
+    return gfx_width;
+}
+
+int gfx_ysize()
+{
+    return gfx_height;
 }
 

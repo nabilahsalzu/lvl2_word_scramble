@@ -55,4 +55,8 @@ void gfx_fillcircle( int x , int y, int radius);
 
 //void gfx_text1(char *test1, int x, int y);
 void gfx_text(char *test2, int x, int y,int sel);
+
+// add
+int gfx_xsize();
+int gfx_ysize();
 #endif
