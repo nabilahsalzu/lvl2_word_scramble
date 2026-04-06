@@ -30,9 +30,9 @@ int main()
         time_t now = time(NULL);
 
         // -------- INPUT --------
-        if (gfx_event_waiting()) {
+        // Use a while loop to instantly drain any queued up events (like mouse movements)
+        while (gfx_event_waiting()) {
             char event = gfx_wait();
-            needs_redraw = 1;
 
             if (event == 1) { // mouse click
                 int mx = gfx_xpos();
@@ -41,6 +41,9 @@ int main()
                 if (state == STATE_MENU) state = menu_handle_click(mx, my);
                 else if (state == STATE_HELP) state = help_handle_click(mx, my);
                 else if (state == STATE_PLAYING) state = game_handle_input(event);
+                
+                // ONLY flag a redraw when an actual click happens
+                needs_redraw = 1; 
             }
         }
 
@@ -57,8 +60,11 @@ int main()
 
         // -------- DRAW --------
         if (needs_redraw) {
-            gfx_clear_color(255, 255, 255);
-            gfx_clear();
+            // FIX: Instead of gfx_clear() which causes screen tearing/flickering,
+            // we draw a filled rectangle over the screen. This queues the background 
+            // color with the rest of the frame so it draws smoothly.
+            gfx_color(255, 255, 255);
+            gfx_fillrectangle(0, 0, win_width, win_height);
 
             if (state == STATE_MENU) draw_menu();
             else if (state == STATE_HELP) draw_help();

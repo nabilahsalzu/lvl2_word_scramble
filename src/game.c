@@ -132,9 +132,9 @@ void draw_game() {
     int w = gfx_xsize();
     int h = gfx_ysize();
 
-    gfx_color(255,255,255);
-    gfx_clear();
-
+    // FIX: Removed the redundant gfx_clear() here since main.c is already 
+    // handling the background fill smoothly.
+    
     gfx_color(0,0,0);
 
     // Title
