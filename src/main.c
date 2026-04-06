@@ -40,6 +40,12 @@ int main()
             }
         }
         
+        // Update game (timer, logic)
+		if (state == STATE_PLAYING) {
+		    state = game_update();
+		    needs_redraw = 1; // force redraw for timer countdown
+		}
+
         // -------- DRAW --------
         if (needs_redraw) {
             gfx_clear_color(255,255,255);

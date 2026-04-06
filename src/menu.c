@@ -38,7 +38,10 @@ GameState menu_handle_click(int mx, int my) {
     int x = (w - btn_w) / 2;
 
     if (mx >= x && mx <= x + btn_w && my >= 180 && my <= 220)
-        return STATE_PLAYING;
+    {
+    	game_init();
+		return STATE_PLAYING;
+    }
 
     if (mx >= x && mx <= x + btn_w && my >= 240 && my <= 280)
         return STATE_HELP;

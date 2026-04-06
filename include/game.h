@@ -10,7 +10,10 @@ typedef enum {
     STATE_EXIT
 } GameState;
 
+// -------- GAME FUNCTIONS --------
 void draw_game();
 GameState game_handle_input(char c);
+GameState game_update();
+void game_init();
 
 #endif
