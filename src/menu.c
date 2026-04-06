@@ -1,13 +1,13 @@
 #include "menu.h"
 #include "gfx.h"
 
-void draw_menu() {
+void draw_menu() 
+{
     int w = gfx_xsize();
     int h = gfx_ysize();
 
     gfx_color(0, 0, 0);
 
-    // Title
     gfx_text("WORD SCRAMBLE GAME", w/2 - 150, 100, 2);
 
     int btn_w = 300;
@@ -30,9 +30,9 @@ void draw_menu() {
     gfx_text("Exit", x + 120, y3 + 25, 1);
 }
 
-GameState menu_handle_click(int mx, int my) {
+GameState menu_handle_click(int mx, int my) 
+{
     int w = gfx_xsize();
-
     int btn_w = 300;
     int btn_h = 40;
     int x = (w - btn_w) / 2;
@@ -44,16 +44,21 @@ GameState menu_handle_click(int mx, int my) {
     }
 
     if (mx >= x && mx <= x + btn_w && my >= 240 && my <= 280)
-        return STATE_HELP;
+    {
+    	return STATE_HELP;
+    }
 
     if (mx >= x && mx <= x + btn_w && my >= 300 && my <= 340)
+    {
         return STATE_EXIT;
+    }
 
     return STATE_MENU;
 }
 
 // -------- HELP --------
-void draw_help() {
+void draw_help() 
+{
     int w = gfx_xsize();
 
     gfx_color(0, 0, 0);
@@ -73,17 +78,17 @@ void draw_help() {
     gfx_text("Back", x + 120, y + 25, 1);
 }
 
-GameState help_handle_click(int mx, int my) {
+GameState help_handle_click(int mx, int my) 
+{
     int w = gfx_xsize();
-
     int btn_w = 300;
     int btn_h = 40;
     int x = (w - btn_w) / 2;
     int y = 320;
 
-    if (mx >= x && mx <= x + btn_w &&
-        my >= y && my <= y + btn_h) {
-        return STATE_MENU;
+    if (mx >= x && mx <= x + btn_w && my >= y && my <= y + btn_h) 
+    {
+		return STATE_MENU;
     }
 
     return STATE_HELP;

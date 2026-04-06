@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <time.h>
 #include <X11/Xlib.h>
 #include "gfx.h"
 #include "game.h"
@@ -10,7 +11,6 @@ int main()
     // Get screen size
     Display *d = XOpenDisplay(NULL);
     int screen = DefaultScreen(d);
-
     int screen_width = DisplayWidth(d, screen);
     int screen_height = DisplayHeight(d, screen);
 
@@ -23,7 +23,11 @@ int main()
     GameState state = STATE_MENU;
     int needs_redraw = 1;
 
+    // For controlling timer redraw (once per second)
+    time_t last_redraw_time = 0;
+
     while (state != STATE_EXIT) {
+        time_t now = time(NULL);
 
         // -------- INPUT --------
         if (gfx_event_waiting()) {
@@ -39,27 +43,33 @@ int main()
                 else if (state == STATE_PLAYING) state = game_handle_input(event);
             }
         }
-        
-        // Update game (timer, logic)
-		if (state == STATE_PLAYING) {
-		    state = game_update();
-		    needs_redraw = 1; // force redraw for timer countdown
-		}
+
+        // -------- UPDATE GAME --------
+        if (state == STATE_PLAYING) {
+            state = game_update();
+
+            // Redraw once per second for timer
+            if (now != last_redraw_time) {
+                needs_redraw = 1;
+                last_redraw_time = now;
+            }
+        }
 
         // -------- DRAW --------
         if (needs_redraw) {
-            gfx_clear_color(255,255,255);
+            gfx_clear_color(255, 255, 255);
             gfx_clear();
 
-            if(state == STATE_MENU) draw_menu();
-            else if(state == STATE_HELP) draw_help();
-            else if(state == STATE_PLAYING) draw_game();
+            if (state == STATE_MENU) draw_menu();
+            else if (state == STATE_HELP) draw_help();
+            else if (state == STATE_PLAYING) draw_game();
 
             gfx_flush();
             needs_redraw = 0;
         }
 
-        usleep(16000);
+        // Sleep a short time to reduce CPU usage
+        usleep(10000); // ~100fps max, smooth enough
     }
 
     return 0;
